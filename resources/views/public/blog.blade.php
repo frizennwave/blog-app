@@ -48,7 +48,7 @@
                                 <button class="text-success border-0 bg-transparent px-0" data-bs-toggle="modal"
                                     data-bs-target="#updateBlogModal" data-slug="{{ $blog->slug }}"
                                     data-title="{{ $blog->title }}" data-author="{{ $blog->author }}"
-                                    data-content="{{ $blog->content }}" onclick="fillModal(this)"><i
+                                    data-content="{{ $blog->content }}" data-tags="{{ $blog->tags->pluck('id')->implode(',') }}" onclick="fillModal(this)"><i
                                         class="fa-regular fa-pen-to-square"></i></button> |
                                 <form action="/blog/{{ $blog->slug }}" method="POST" class="d-inline form-delete">
                                     @method('DELETE')
@@ -93,6 +93,17 @@
                             <label for="content" class="col-form-label">Content:</label>
                             <textarea name="content" class="form-control" id="content" required>{{ old('content') }}</textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="tags" class="col-form-label">Tags:</label>
+                            <div class="input-group mb-3">
+                                @foreach ($tags as $key => $tag)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="addTag{{ $key }}">
+                                    <label class="form-check-label me-3" for="addTag{{ $key }}">{{ $tag->name }}</label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -107,14 +118,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addBlogModalLabel">Ubah Blog</h1>
+                    <h1 class="modal-title fs-5" id="updateBlogModalLabel">Ubah Blog</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="blogForm" action="" method="POST">
                     @method('PATCH')
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="title" class="col-form-label">Title:</label>
+                            <label for="titleUpdate" class="col-form-label">Title:</label>
                             <input name="title" type="text" class="form-control" id="titleUpdate"
                                 value="{{ old('title') }}" required>
                         </div>
@@ -126,6 +137,17 @@
                         <div class="mb-3">
                             <label for="content" class="col-form-label">Content:</label>
                             <textarea name="content" class="form-control" id="contentUpdate" required>{{ old('content') }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tags" class="col-form-label">Tags:</label>
+                            <div class="input-group mb-3">
+                                @foreach ($tags as $key => $tag)
+                                <div class="form-check">
+                                    <input class="form-check-input update-tag" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="updateTag{{ $key }}">
+                                    <label class="form-check-label me-3" for="updateTag{{ $key }}">{{ $tag->name }}</label>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -168,6 +190,12 @@
             document.getElementById('contentUpdate').value = btn.dataset.content;
 
             document.getElementById('blogForm').action = "/blog/" + btn.dataset.slug;
+
+            const tags = btn.dataset.tags.split(',');
+
+            document.querySelectorAll('.update-tag').forEach(checkbox => {
+                checkbox.checked = tags.includes(checkbox.value);
+            });
         }
 
         document.querySelectorAll('.form-delete').forEach(form => {

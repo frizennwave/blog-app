@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -10,11 +11,12 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $title = $request->title;
+        $tags = Tag::all();
 
         // $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(5);
         $blogs = Blog::where('title', 'LIKE', '%' . $title . '%')->orderBy('id', 'desc')->paginate(5);
 
-        return view('public.blog', ['title' => 'Blog', 'blogs' => $blogs, 'keyword' => $title]);
+        return view('public.blog', ['title' => 'Blog', 'blogs' => $blogs, 'keyword' => $title, 'tags' => $tags]);
     }
 
     public function detailBlog(string $slug)
@@ -44,7 +46,8 @@ class BlogController extends Controller
         //     'updated_at' => now()
         // ]);
 
-        Blog::create($request->all());
+        $blog = Blog::create($request->all());
+        $blog->tags()->attach($request->tags);
 
         return redirect('/blog')->with('success', 'Data berhasil disimpan!');
     }
@@ -52,7 +55,7 @@ class BlogController extends Controller
     public function update(Request $request, string $slug)
     {
         // $blog = DB::table('blogs')->where('slug', $slug)->firstOrFail();
-        $blog = Blog::where('slug', $slug)->firstOrFail();
+        $blog = Blog::with(['tags'])->where('slug', $slug)->firstOrFail();
 
         $request->validate([
             'title' => 'required|unique:blogs,title,' . $blog->id . '|max:255',
@@ -70,6 +73,14 @@ class BlogController extends Controller
         //     'updated_at' => now()
         // ]);
 
+        // detach/hapus tag dari blog
+        // $blog->tags()->detach($blog->tags);
+        // attach/tambah tag ke blog
+        // $blog->tags()->attach($request->tags);
+
+
+        // Menggunakan sync
+        $blog->tags()->sync($request->tags);
         $blog->update($request->all());
 
         return redirect('/blog')->with('success', 'Data Berhasil diubah!');
