@@ -7,7 +7,7 @@
     <div class="container pt-custom">
         <div class="row">
             <div class="col-lg-8 mx-auto">
-                <a href="/blog/trash" class="btn btn-primary mb-3">
+                <a href="{{ route('trashBlog') }}" class="btn btn-primary mb-3">
                     <i class="fa-solid fa-arrow-left"></i> Kembali
                 </a>
 

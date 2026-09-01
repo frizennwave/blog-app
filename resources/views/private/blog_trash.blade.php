@@ -9,7 +9,7 @@
 
             <div class="row justify-content-end max-w-50">
                 <div class="col-md-6">
-                    <a href="/blog" class="btn btn-primary mb-3">
+                    <a href="{{ route('blog') }}" class="btn btn-primary mb-3">
                         <i class="fa-solid fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -40,13 +40,13 @@
                             <th scope="row">{{ ($blogs->firstItem() ?? 0) + $loop->index }}</th>
                             <td>{{ $blog->title }}</td>
                             <td class="text-center">
-                                <a href="/blog/trash/{{ $blog->slug }}" class="text-primary">
+                                <a href="{{ route('detailTrashBlog', ['slug' => $blog->slug]) }}" class="text-primary">
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a> |
-                                <a href="/blog/restore/{{ $blog->slug }}" class="text-success btn-restore">
+                                <a href="{{ route('restoreBlog', ['slug' => $blog->slug]) }}" class="text-success btn-restore">
                                     <i class="fa-solid fa-trash-arrow-up"></i>
                                 </a> |
-                                <form action="/blog/delete/{{ $blog->slug }}" method="POST" class="d-inline form-delete">
+                                <form action="{{ route('deleteBlog', ['slug' => $blog->slug]) }}" method="POST" class="d-inline form-delete">
                                     @method('DELETE')
                                     <button type="submit" class="text-danger border-0 bg-transparent px-0 btn-delete">
                                         <i class="fa-solid fa-trash"></i>
@@ -75,7 +75,7 @@
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/blog') }}";
+                    window.location.href = "{{ url('/admin/blog') }}";
                 }
             });
         </script>

@@ -6,21 +6,24 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('public.home', ['title' => 'Home']);
+    return view('private.home', ['title' => 'Home']);
 })->name('home');
 
-// Blog Route
-Route::get('/blog', [BlogController::class, 'index'])->name('blog');
-Route::get('/blog/trash', [BlogController::class, 'trash'])->name('trashBlog');
-Route::get('/blog/trash/{slug}', [BlogController::class, 'trashDetail'])->name('detailTrashBlog');
-Route::delete('/blog/delete/{slug}', [BlogController::class, 'delete']);
-Route::get('/blog/restore/{slug}', [BlogController::class, 'restore']);
-Route::get('/blog/{slug}', [BlogController::class, 'detailBlog'])->name('detailBlog');
-Route::post('/blog/create', [BlogController::class, 'create']);
-Route::patch('/blog/{slug}', [BlogController::class, 'update']);
-Route::delete('/blog/{slug}', [BlogController::class, 'softDelete']);
+// Private Blog Route
+Route::get('/admin/blog', [BlogController::class, 'adminBlog'])->name('blog');
+Route::get('/admin/blog/trash', [BlogController::class, 'trash'])->name('trashBlog');
+Route::get('/admin/blog/trash/{slug}', [BlogController::class, 'trashDetail'])->name('detailTrashBlog');
+Route::delete('/admin/blog/delete/{slug}', [BlogController::class, 'delete'])->name('deleteBlog');
+Route::get('/admin/blog/restore/{slug}', [BlogController::class, 'restore'])->name('restoreBlog');
+Route::get('/admin/blog/{slug}', [BlogController::class, 'detailBlog'])->name('detailBlog');
+Route::post('/admin/blog/create', [BlogController::class, 'create'])->name('createBlog');
+Route::patch('/admin/blog/{slug}', [BlogController::class, 'update'])->name('updateBlog');
+Route::delete('/admin/blog/{slug}', [BlogController::class, 'softDelete'])->name('softDeleteBlog');
 
-// User Route
+// Public Blog Route
+Route::get('/blog', [BlogController::class, 'index'])->name('public_blog');
+
+// Private User Route
 Route::get('/users', [UserController::class, 'index'])->name('user');
 Route::get('/user/{slug}', [UserController::class, 'detail'])->name('detailUser');
 Route::delete('/user/{slug}', [UserController::class, 'softDelete']);

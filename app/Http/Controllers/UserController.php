@@ -18,14 +18,14 @@ class UserController extends Controller
             $query->where('name', 'LIKE', '%' . $keyword . '%');
         })->orderBy('id', 'desc')->paginate(5);
 
-        return view('public.user', ['title' => 'Data User', 'users' => $users, 'keyword' => $keyword]);
+        return view('private.user', ['title' => 'Data User', 'users' => $users, 'keyword' => $keyword]);
     }
 
     public function detail(string $slug)
     {
         $user = User::with('profile')->where('slug', $slug)->firstOrFail();
 
-        return view('public.detail_user', ['title' => $user->username, 'user' => $user]);
+        return view('private.detail_user', ['title' => $user->username, 'user' => $user]);
     }
 
     public function softDelete(string $slug)
@@ -50,7 +50,7 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(5);
 
-        return view('public.user_trash', ['title' => 'Sampah User', 'users' => $users, 'keyword' => $keyword]);
+        return view('private.user_trash', ['title' => 'Sampah User', 'users' => $users, 'keyword' => $keyword]);
     }
 
     public function trashDetail(string $slug)
@@ -59,7 +59,7 @@ class UserController extends Controller
             $query->withTrashed();
         }])->where('slug', $slug)->firstOrFail();
 
-        return view('public.detail_trash_user', ['title' => 'Detail', 'user' => $user]);
+        return view('private.detail_trash_user', ['title' => 'Detail', 'user' => $user]);
     }
 
     public function restore(string $slug)

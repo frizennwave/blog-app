@@ -146,9 +146,11 @@
                 <div class="navbar-nav ms-auto">
                     <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ Route('home') }}">Home</a>
                     <a class="nav-link {{ Route::is('blog') || Route::is('detailBlog') || Route::is('trashBlog') ? 'active' : '' }}"
-                        href="{{ Route('blog') }}">Blog</a>
+                        href="{{ Route('blog') }}">Data Blog</a>
                     <a class="nav-link {{ Route::is('user') || Route::is('detailUser') ? 'active' : '' }}"
-                        href="{{ Route('user') }}">User</a>
+                        href="{{ Route('user') }}">Data User</a>
+                    <a class="nav-link {{ Route::is('public_blog') || Route::is('detailPublicBlog') ? 'active' : '' }}"
+                        href="{{ Route('public_blog') }}">Blog</a>
                 </div>
             </div>
         </div>
