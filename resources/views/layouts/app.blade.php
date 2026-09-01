@@ -147,10 +147,14 @@
                     <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ Route('home') }}">Home</a>
                     <a class="nav-link {{ Route::is('blog') || Route::is('detailBlog') || Route::is('trashBlog') ? 'active' : '' }}"
                         href="{{ Route('blog') }}">Data Blog</a>
+                    <a class="nav-link {{ Route::is('news') || Route::is('detailNews') || Route::is('trashNews') ? 'active' : '' }}"
+                        href="{{ Route('news') }}">Data News</a>
                     <a class="nav-link {{ Route::is('user') || Route::is('detailUser') ? 'active' : '' }}"
                         href="{{ Route('user') }}">Data User</a>
                     <a class="nav-link {{ Route::is('public_blog') || Route::is('detailPublicBlog') ? 'active' : '' }}"
                         href="{{ Route('public_blog') }}">Blog</a>
+                    <a class="nav-link {{ Route::is('public_news') || Route::is('detailPublicNews') ? 'active' : '' }}"
+                        href="{{ Route('public_news') }}">News</a>
                 </div>
             </div>
         </div>

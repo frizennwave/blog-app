@@ -5,11 +5,11 @@
 @section('content')
     <section class="pt-custom">
         <div class="container">
-            <h1 class="fs-2 mb-5">Sampah Blog</h1>
+            <h1 class="fs-2 mb-5">Sampah News</h1>
 
             <div class="row justify-content-end max-w-50">
                 <div class="col-md-6">
-                    <a href="{{ route('blog') }}" class="btn btn-primary mb-3">
+                    <a href="{{ route('news') }}" class="btn btn-primary mb-3">
                         <i class="fa-solid fa-arrow-left"></i> Kembali
                     </a>
                 </div>
@@ -36,19 +36,19 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    @forelse ($blogs as $blog)
+                    @forelse ($news as $item)
                         <tr>
-                            <th scope="row">{{ ($blogs->firstItem() ?? 0) + $loop->index }}</th>
-                            <td>{{ $blog->title }}</td>
-                            <td class="text-center">{{ collect($blog->rating->pluck('rating_value'))->avg() ?? 0 }}</td>
+                            <th scope="row">{{ ($news->firstItem() ?? 0) + $loop->index }}</th>
+                            <td>{{ $item->title }}</td>
+                            <td class="text-center">{{ collect($item->rating->pluck('rating_value'))->avg() ?? 0 }}</td>
                             <td class="text-center">
-                                <a href="{{ route('detailTrashBlog', ['slug' => $blog->slug]) }}" class="text-primary">
+                                <a href="{{ route('detailTrashNews', ['slug' => $item->slug]) }}" class="text-primary">
                                     <i class="fa-solid fa-circle-info"></i>
                                 </a> |
-                                <a href="{{ route('restoreBlog', ['slug' => $blog->slug]) }}" class="text-success btn-restore">
+                                <a href="{{ route('restoreNews', ['slug' => $item->slug]) }}" class="text-success btn-restore">
                                     <i class="fa-solid fa-trash-arrow-up"></i>
                                 </a> |
-                                <form action="{{ route('deleteBlog', ['slug' => $blog->slug]) }}" method="POST" class="d-inline form-delete">
+                                <form action="{{ route('deleteNews', ['slug' => $item->slug]) }}" method="POST" class="d-inline form-delete">
                                     @method('DELETE')
                                     <button type="submit" class="text-danger border-0 bg-transparent px-0 btn-delete">
                                         <i class="fa-solid fa-trash"></i>
@@ -64,7 +64,7 @@
                 </tbody>
             </table>
 
-            {{ $blogs->links() }}
+            {{ $news->links() }}
         </div>
     </section>
 
@@ -77,7 +77,7 @@
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/admin/blog') }}";
+                    window.location.href = "{{ url('/admin/news') }}";
                 }
             });
         </script>

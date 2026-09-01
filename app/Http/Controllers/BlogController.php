@@ -10,28 +10,31 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::with('image')->latest()->paginate(6);
+        $blogs = Blog::with(['image', 'rating'])->latest()->paginate(6);
 
         return view('public.blog', compact('blogs'));
     }
 
     public function adminBlog(Request $request)
     {
-        $title = $request->title;
+        $keyword = $request->title;
         $tags = Tag::all();
 
         // $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(5);
-        $blogs = Blog::where('title', 'LIKE', '%' . $title . '%')->orderBy('id', 'desc')->paginate(5);
+        $blogs = Blog::with(['rating', 'tags'])->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(5);
+        $title = 'Blog';
 
-        return view('private.blog', ['title' => 'Blog', 'blogs' => $blogs, 'keyword' => $title, 'tags' => $tags]);
+        return view('private.blog', compact('title', 'blogs', 'keyword', 'tags'));
     }
 
     public function detailBlog(string $slug)
     {
         // $blog = DB::table('blogs')->where('slug', $slug)->firstOrFail();
-        $blog = Blog::with(['comment', 'tags'])->where('slug', $slug)->firstOrFail();
+        $blog = Blog::with(['comment', 'tags', 'rating'])->where('slug', $slug)->firstOrFail();
+        $tags = Tag::all();
+        $title = 'Detail Blog';
 
-        return view('private.detail_blog', ['title' => 'Detail Blog', 'blog' => $blog]);
+        return view('private.detail_blog', compact('title', 'blog', 'tags'));
     }
 
     public function create(Request $request)
@@ -105,7 +108,7 @@ class BlogController extends Controller
     public function trash(Request $request)
     {
         $keyword = $request->title;
-        $blogs = Blog::onlyTrashed()->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
+        $blogs = Blog::onlyTrashed()->with('rating')->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
 
         return view('private.blog_trash', ['title' => 'Sampah Blog', 'blogs' => $blogs, 'keyword' => $keyword]);
     }

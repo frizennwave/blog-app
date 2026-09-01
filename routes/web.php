@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('private.home', ['title' => 'Home']);
+    return view('public.home', ['title' => 'Home']);
 })->name('home');
 
 // Private Blog Route
@@ -22,6 +23,21 @@ Route::delete('/admin/blog/{slug}', [BlogController::class, 'softDelete'])->name
 
 // Public Blog Route
 Route::get('/blog', [BlogController::class, 'index'])->name('public_blog');
+
+// Private News Route
+Route::get('/admin/news', [NewsController::class, 'adminNews'])->name('news');
+Route::get('/admin/news/trash', [NewsController::class, 'trash'])->name('trashNews');
+Route::get('/admin/news/trash/{slug}', [NewsController::class, 'trashDetail'])->name('detailTrashNews');
+Route::delete('/admin/news/delete/{slug}', [NewsController::class, 'delete'])->name('deleteNews');
+Route::get('/admin/news/restore/{slug}', [NewsController::class, 'restore'])->name('restoreNews');
+Route::get('/admin/news/{slug}', [NewsController::class, 'detailNews'])->name('detailNews');
+Route::post('/admin/news/create', [NewsController::class, 'create'])->name('createNews');
+Route::patch('/admin/news/{slug}', [NewsController::class, 'update'])->name('updateNews');
+Route::delete('/admin/news/{slug}', [NewsController::class, 'softDelete'])->name('softDeleteNews');
+
+// Public Blog Route
+Route::get('/news', [NewsController::class, 'index'])->name('public_news');
+
 
 // Private User Route
 Route::get('/users', [UserController::class, 'index'])->name('user');
