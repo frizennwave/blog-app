@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::with(['image', 'rating'])->latest()->paginate(6);
+        $category = $request->query('category');
 
-        return view('public.blog', compact('blogs'));
+        $blogs = Blog::with(['image', 'rating', 'categories'])
+            ->when($category, function ($query) use ($category) {
+                $query->whereHas('categories', function ($query) use ($category) {
+                    $query->where('slug', $category);
+                });
+            })->latest()->paginate(6)->withQueryString();
+
+        $categories = Category::query()->orderBy('name')->get();
+
+        return view('public.blog', compact('blogs', 'categories', 'category'));
     }
 
     public function adminBlog(Request $request)
@@ -30,7 +40,7 @@ class BlogController extends Controller
     public function detailBlog(string $slug)
     {
         // $blog = DB::table('blogs')->where('slug', $slug)->firstOrFail();
-        $blog = Blog::with(['comment', 'tags', 'rating'])->where('slug', $slug)->firstOrFail();
+        $blog = Blog::with(['comment', 'tags', 'rating', 'categories'])->where('slug', $slug)->firstOrFail();
         $tags = Tag::all();
         $title = 'Detail Blog';
 
@@ -108,9 +118,10 @@ class BlogController extends Controller
     public function trash(Request $request)
     {
         $keyword = $request->title;
-        $blogs = Blog::onlyTrashed()->with('rating')->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
+        $blogs = Blog::onlyTrashed()->with(['rating', 'categories'])->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
+        $title = 'Sampah Blog';
 
-        return view('private.blog_trash', ['title' => 'Sampah Blog', 'blogs' => $blogs, 'keyword' => $keyword]);
+        return view('private.blog_trash', compact('keyword', 'blogs', 'title'));
     }
 
     public function trashDetail(string $slug)

@@ -19,6 +19,22 @@
             </div>
         </div>
 
+        {{-- Category Filter --}}
+        <div class="mb-4">
+            <div class="d-flex flex-wrap gap-2">
+                {{-- Semua --}}
+                <a href="{{ route('public_blog') }}" class="btn {{ !$category ? 'btn-primary' : 'btn-outline-primary' }}">Semua</a>
+
+                {{-- Categories --}}
+                @foreach ($categories as $item)
+                    <a href="{{ route('public_blog', ['category' => $item->slug]) }}" class="btn {{ $category === $item->slug ? 'btn-primary' : 'btn-outline-primary' }}">
+                        {{ $item->name }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+
         {{-- News List --}}
         <div class="row g-4">
             @forelse ($news as $item)

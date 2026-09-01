@@ -17,13 +17,20 @@
                 <!-- Meta Information -->
                 <p class="meta-info">By <strong>{{ $news->author }}</strong> | {{ $news->created_at->format('d-m-Y') }}</p>
 
+                <div class="row g-3 py-3">
+                    <div class="col-auto">
+                        Categories:
+                        @foreach ($news->categories as $category)
+                            <span class="suggestion-tag">{{ $category->name }}</span>
+                        @endforeach
+                    </div>
+                </div>
 
                 <!-- Blog Post Content -->
                 <div class="post-content">
                     <p>{{ $news->content }}</p>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

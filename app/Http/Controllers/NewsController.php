@@ -2,33 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $news = News::with(['image', 'rating'])->latest()->paginate(6);
+        $category = $request->query('category');
 
-        return view('public.news', compact('news'));
+        $news = News::with(['image', 'rating', 'categories'])
+            ->when($category, function ($query) use ($category) {
+                $query->whereHas('categories', function ($query) use ($category) {
+                    $query->where('slug', $category);
+                });
+            })->latest()->paginate(6)->withQueryString();
+
+        $categories = Category::query()->orderBy('name')->get();
+
+        return view('public.news', compact('news', 'categories', 'category'));
     }
 
     public function adminNews(Request $request)
     {
-        $title = $request->title;
+        $keyword = $request->title;
         /* $tags = Tag::all(); */
 
-        $news = News::where('title', 'LIKE', '%' . $title . '%')->orderBy('id', 'desc')->paginate(5);
+        $news = News::where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(5);
+        $title = 'News';
 
-        return view('private.news', ['title' => 'News', 'news' => $news, 'keyword' => $title]);
+        return view('private.news', compact('title', 'news', 'keyword'));
     }
 
     public function detailNews(string $slug)
     {
-        $news = News::with('image')->where('slug', $slug)->firstOrFail();
+        $news = News::with(['image', 'categories'])->where('slug', $slug)->firstOrFail();
+        $title = 'Detail News';
 
-        return view('private.detail_news', ['title' => 'Detail News', 'news' => $news]);
+        return view('private.detail_news', compact('title', 'news'));
     }
 
     public function create(Request $request)
@@ -74,7 +86,7 @@ class NewsController extends Controller
     public function trash(Request $request)
     {
         $keyword = $request->title;
-        $news = News::onlyTrashed()->with('rating')->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
+        $news = News::onlyTrashed()->with(['rating', 'categories'])->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
         $title = 'Sampah News';
 
         return view('private.news_trash', compact('title', 'news', 'keyword'));

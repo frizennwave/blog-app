@@ -19,11 +19,12 @@
                 <p class="meta-info">Deleted at {{ $blog->deleted_at->format('d-m-Y') }}</p>
 
                 <div class="row g-3 py-3">
-                    @foreach ($blog->tags as $tag)
-                        <div class="col-auto">
-                            <span class="suggestion-tag">#{{ $tag->name }}</span>
-                        </div>
-                    @endforeach
+                    <div class="col-auto">
+                        Categories:
+                        @foreach ($blog->categories as $category)
+                            <span class="suggestion-tag">{{ $category->name }}</span>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Blog Post Content -->
@@ -53,6 +54,15 @@
                         constantly evolving, and staying ahead of the curve will help developers create more innovative and
                         impactful web experiences.</p> --}}
 
+                </div>
+
+                <div class="row g-3 py-3">
+                    <div class="col-auto">
+                        Tags:
+                        @foreach ($blog->tags as $tag)
+                            <span class="suggestion-tag">#{{ $tag->name }}</span>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 

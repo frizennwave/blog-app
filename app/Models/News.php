@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -46,5 +47,10 @@ class News extends Model
     public function rating(): MorphMany
     {
         return $this->morphMany(Rating::class, 'ratingable');
+    }
+
+    public function categories(): MorphToMany
+    {
+        return $this->morphToMany(Category::class, 'categoriables');
     }
 }
