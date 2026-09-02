@@ -13,7 +13,7 @@
     <style>
         .hero {
             min-height: 100vh;
-            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+background: linear-gradient(135deg, #0f172a, #06b6d4);
         }
 
         .hero img {
@@ -131,30 +131,38 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary position-fixed w-100 z-3">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm position-fixed w-100 z-3">
         <div class="container">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
                 <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo"
-                    width="30" height="24" class="d-inline-block align-text-top">
-                Bootstrap
+                    width="30" height="24" class="d-inline-block align-text-top me-2">
+                <span>LaravelApp</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ Route('home') }}">Home</a>
-                    <a class="nav-link {{ Route::is('blog') || Route::is('detailBlog') || Route::is('trashBlog') ? 'active' : '' }}"
-                        href="{{ Route('blog') }}">Data Blog</a>
-                    <a class="nav-link {{ Route::is('news') || Route::is('detailNews') || Route::is('trashNews') ? 'active' : '' }}"
-                        href="{{ Route('news') }}">Data News</a>
-                    <a class="nav-link {{ Route::is('user') || Route::is('detailUser') ? 'active' : '' }}"
-                        href="{{ Route('user') }}">Data User</a>
-                    <a class="nav-link {{ Route::is('public_blog') || Route::is('detailPublicBlog') ? 'active' : '' }}"
+                <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <a class="nav-link px-3 rounded-pill {{ Route::is('home') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}" href="{{ Route('home') }}">Home</a>
+                    <a class="nav-link px-3 rounded-pill {{ Route::is('public_blog') || Route::is('detailPublicBlog') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}"
                         href="{{ Route('public_blog') }}">Blog</a>
-                    <a class="nav-link {{ Route::is('public_news') || Route::is('detailPublicNews') ? 'active' : '' }}"
+                    <a class="nav-link px-3 rounded-pill {{ Route::is('public_news') || Route::is('detailPublicNews') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}"
                         href="{{ Route('public_news') }}">News</a>
+
+                    @guest
+                        <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
+                            href="{{ Route('login') }}">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+                        </a>
+                    @endguest
+
+                    @auth
+                        <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
+                            href="{{ Route('dashboard') }}">
+                            <i class="fa-solid fa-house-chimney me-1"></i> Dasboard
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -163,7 +171,6 @@
     <main>
         @yield('content')
     </main>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
