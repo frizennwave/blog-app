@@ -70,7 +70,7 @@
                             {{-- Author --}}
                             <div class="text-muted small mb-1">
                                 <i class="fa-regular fa-user me-1"></i>
-                                {{ $blog->author }}
+                                {{ $blog->user->profile->name }}
                             </div>
 
                             @if ($blog->rating->count() < 1)

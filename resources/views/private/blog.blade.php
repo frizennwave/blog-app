@@ -59,7 +59,7 @@
                                         <th scope="row" class="ps-3 text-muted fw-semibold">{{ ($blogs->firstItem() ?? 0) + $loop->index }}</th>
                                         <td>
                                             <span class="fw-semibold text-dark d-block">{{ $blog->title }}</span>
-                                            <small class="text-muted"><i class="fa-regular fa-user me-1"></i> {{ $blog->author ?? 'Admin' }}</small>
+                                            <small class="text-muted"><i class="fa-regular fa-user me-1"></i> {{ $blog->user->profile->name }}</small>
                                         </td>
                                         <td class="text-center">
                                             @php $avgRating = collect($blog->rating->pluck('rating_value'))->avg() ?? 0; @endphp
@@ -169,11 +169,6 @@
                                 value="{{ old('title') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="authorUpdate" class="form-label fw-semibold small text-muted">Author:</label>
-                            <input name="author" type="text" class="form-control bg-light border-0 py-2" id="authorUpdate"
-                                value="{{ old('author') }}" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="contentUpdate" class="form-label fw-semibold small text-muted">Content:</label>
                             <textarea name="content" class="form-control bg-light border-0" id="contentUpdate" rows="4" required>{{ old('content') }}</textarea>
                         </div>
@@ -229,7 +224,6 @@
     <script>
         function fillModal(btn) {
             document.getElementById('titleUpdate').value = btn.dataset.title;
-            document.getElementById('authorUpdate').value = btn.dataset.author;
             document.getElementById('contentUpdate').value = btn.dataset.content;
 
             document.getElementById('blogForm').action = "/admin/blog/" + btn.dataset.slug;

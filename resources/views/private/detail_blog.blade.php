@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', $title)
 
@@ -29,7 +29,7 @@
 
                         <!-- Meta Information -->
                         <div class="d-flex align-items-center text-muted small mb-4 pb-3 border-bottom gap-3">
-                            <span><i class="fa-regular fa-user me-1"></i> By <strong>{{ $blog->author ?? 'Admin' }}</strong></span>
+                            <span><i class="fa-regular fa-user me-1"></i> By <strong>{{ $blog->user->profile->name }}</strong></span>
                             <span>•</span>
                             <span><i class="fa-regular fa-calendar me-1"></i> {{ $blog->created_at->format('d M Y') }}</span>
                         </div>

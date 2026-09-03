@@ -158,10 +158,24 @@ background: linear-gradient(135deg, #0f172a, #06b6d4);
                     @endguest
 
                     @auth
+                        <a class="btn btn-danger btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
+                            href="/logout">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Logout
+                        </a>
+
+                        @role(['admin', 'editor'])
                         <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
                             href="{{ Route('dashboard') }}">
                             <i class="fa-solid fa-house-chimney me-1"></i> Dasboard
                         </a>
+                        @endrole
+
+                        @role('user')
+                        <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
+                            href="{{ Route('detailUser', ['slug' => auth()->user()->slug]) }}">
+                            <i class="fa-solid fa-user me-1"></i> Profile
+                        </a>
+                        @endrole
                     @endauth
                 </div>
             </div>

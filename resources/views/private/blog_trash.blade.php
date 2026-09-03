@@ -54,7 +54,7 @@
                                         <th scope="row" class="ps-3 text-muted fw-semibold">{{ ($blogs->firstItem() ?? 0) + $loop->index }}</th>
                                         <td>
                                             <span class="fw-semibold text-dark d-block">{{ $blog->title }}</span>
-                                            <small class="text-muted"><i class="fa-regular fa-user me-1"></i> {{ $blog->author ?? 'Admin' }}</small>
+                                            <small class="text-muted"><i class="fa-regular fa-user me-1"></i> {{ $blog->user->profile->name }}</small>
                                         </td>
                                         <td class="text-center">
                                             @php $avgRating = collect($blog->rating->pluck('rating_value'))->avg() ?? 0; @endphp

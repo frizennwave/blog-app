@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BlogController extends Controller
 {
@@ -13,7 +14,7 @@ class BlogController extends Controller
     {
         $category = $request->query('category');
 
-        $blogs = Blog::with(['image', 'rating', 'categories'])
+        $blogs = Blog::with(['image', 'rating', 'categories', 'user.profile'])
             ->when($category, function ($query) use ($category) {
                 $query->whereHas('categories', function ($query) use ($category) {
                     $query->where('slug', $category);
@@ -31,7 +32,7 @@ class BlogController extends Controller
         $tags = Tag::all();
 
         // $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(5);
-        $blogs = Blog::with(['rating', 'tags'])->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(5);
+        $blogs = Blog::with(['rating', 'tags', 'user.profile'])->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(5);
         $title = 'Blog';
 
         return view('private.blog', compact('title', 'blogs', 'keyword', 'tags'));
@@ -40,7 +41,7 @@ class BlogController extends Controller
     public function detailBlog(string $slug)
     {
         // $blog = DB::table('blogs')->where('slug', $slug)->firstOrFail();
-        $blog = Blog::with(['comment', 'tags', 'rating', 'categories'])->where('slug', $slug)->firstOrFail();
+        $blog = Blog::with(['comment', 'tags', 'rating', 'categories', 'user.profile'])->where('slug', $slug)->firstOrFail();
         $tags = Tag::all();
         $title = 'Detail Blog';
 
@@ -79,11 +80,10 @@ class BlogController extends Controller
 
         $request->validate([
             'title' => 'required|unique:blogs,title,' . $blog->id . '|max:255',
-            'author' => 'required|max:255',
             'content' => 'required'
         ]);
 
-        $title = $request->title;
+        // $title = $request->title;
 
         // DB::table('blogs')->where('slug', $slug)->update([
         //     'title' => $title,
@@ -98,6 +98,7 @@ class BlogController extends Controller
         // attach/tambah tag ke blog
         // $blog->tags()->attach($request->tags);
 
+        Gate::authorize('update-blog', $blog);
 
         // Menggunakan sync
         $blog->tags()->sync($request->tags);
@@ -118,7 +119,7 @@ class BlogController extends Controller
     public function trash(Request $request)
     {
         $keyword = $request->title;
-        $blogs = Blog::onlyTrashed()->with(['rating', 'categories'])->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
+        $blogs = Blog::onlyTrashed()->with(['rating', 'categories', 'user.profile'])->where('title', 'LIKE', '%' . $keyword . '%')->paginate(5);
         $title = 'Sampah Blog';
 
         return view('private.blog_trash', compact('keyword', 'blogs', 'title'));
@@ -129,7 +130,7 @@ class BlogController extends Controller
         $blog = Blog::onlyTrashed()->with([
             'comment' => function ($query) {
                 $query->withTrashed();
-            }, 'tags'])->where('slug', $slug)->firstOrFail();
+            }, 'tags', 'user.profile'])->where('slug', $slug)->firstOrFail();
 
         return view('private.detail_trash_blog', ['title' => 'Detail Blog', 'blog' => $blog]);
     }

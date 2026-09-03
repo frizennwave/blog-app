@@ -160,14 +160,18 @@
                 <!-- Dropdown Profil Pengguna -->
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none bg-light px-3 py-2 rounded-pill shadow-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if(auth()->user()->image->name && Storage::disk('public')->exists('images/' . auth()->user()->image->name))
+                        <img src="{{ auth()->user()->image->name }}" alt="{{ $user->name }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                    @else
                         <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 32px; height: 32px; font-size: 14px;">
-                            A
+                            {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
                         </div>
-                        <span class="fw-semibold small me-1">Administrator</span>
+                    @endif
+                        <span class="fw-semibold small me-1">{{ auth()->user()->username }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 py-2" style="min-width: 200px;">
-                        <li><h6 class="dropdown-header text-muted small">Masuk sebagai Admin</h6></li>
-                        <li><a class="dropdown-item py-2 px-3 small fw-medium" href="#"><i class="fa-solid fa-user-gear me-2 text-muted"></i> Profil Saya</a></li>
+                        <li><h6 class="dropdown-header text-muted small">Masuk sebagai {{ ucfirst(auth()->user()->role) }}</h6></li>
+                        <li><a class="dropdown-item py-2 px-3 small fw-medium" href="{{ Route('detailUser', ['slug' => auth()->user()->slug]) }}"><i class="fa-solid fa-user-gear me-2 text-muted"></i> Profil Saya</a></li>
                         <li><hr class="dropdown-divider my-1"></li>
                         <li><a class="dropdown-item py-2 px-3 small fw-medium text-danger" href="/logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
                     </ul>
@@ -196,11 +200,13 @@
                         <i class="fa-solid fa-bullhorn"></i> Data News
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ Route::is('user') || Route::is('detailUser') || Route::is('trashUser') || Route::is('detailTrashUser') ? 'active' : '' }}" href="{{ Route('user') }}">
-                        <i class="fa-solid fa-users"></i> Data User
-                    </a>
-                </li>
+                @role('admin')
+                    <li class="nav-item">
+                        <a class="nav-link {{ Route::is('user') || Route::is('detailUser') || Route::is('trashUser') || Route::is('detailTrashUser') ? 'active' : '' }}" href="{{ Route('user') }}">
+                            <i class="fa-solid fa-users"></i> Data User
+                        </a>
+                    </li>
+                @endrole
             </ul>
 
             <div class="sidebar-heading">Sistem</div>

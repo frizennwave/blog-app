@@ -23,7 +23,6 @@ class BlogFactory extends Factory
         return [
             'title' => $title,
             'slug' => Str::slug($title),
-            'author' => fake()->name(),
             'content' => fake()->paragraph()
         ];
     }

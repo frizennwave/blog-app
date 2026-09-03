@@ -7,7 +7,12 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h3 fw-bold text-dark mb-1">Dashboard Overview</h1>
-        <p class="text-muted small mb-0">Selamat datang kembali, Administrator! Berikut ringkasan aktivitas sistem Anda.</p>
+        @role('admin')
+            <p class="text-muted small mb-0">Selamat datang kembali, Administrator! Berikut ringkasan aktivitas sistem Anda.</p>
+        @endrole
+        @role('editor')
+        <p class="text-muted small mb-0">Selamat datang kembali, {{ auth()->user()->username }}! Berikut ringkasan aktivitas sistem Anda.</p>
+        @endrole
     </div>
     <div>
         <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold small">
@@ -15,6 +20,31 @@
         </span>
     </div>
 </div>
+
+@if (session('error'))
+    <div id="alert-error" class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+
+    <script>
+        // Tunggu hingga halaman selesai dimuat
+        document.addEventListener("DOMContentLoaded", function() {
+            const alertBox = document.getElementById('alert-error');
+
+            if (alertBox) {
+                // Set waktu 3000 milidetik (3 detik) sebelum hilang
+                setTimeout(function() {
+                    // Tambahkan efek transisi halus (fade out)
+                    alertBox.style.transition = "opacity 0.5s ease";
+                    alertBox.style.opacity = "0";
+
+                    // Hapus elemen dari dokumen setelah transisi selesai
+                    setTimeout(() => alertBox.remove(), 500);
+                }, 3000);
+            }
+        });
+    </script>
+@endif
 
 <!-- Quick Stats Cards -->
 <div class="row g-4 mb-4">

@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('title', $title)
 
@@ -10,7 +10,7 @@
                 <div class="col-lg-9">
                     <!-- Tombol Kembali -->
                     <div class="mb-4">
-                        <a href="{{ route('news') }}" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
                             <i class="fa-solid fa-arrow-left"></i> <span>Kembali ke Berita</span>
                         </a>
                     </div>

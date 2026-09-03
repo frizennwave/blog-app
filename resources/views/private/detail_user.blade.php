@@ -1,20 +1,20 @@
-@extends('layouts.dashboard')
+@extends(auth()->user()->hasRole('user') ? 'layouts.app' : 'layouts.dashboard')
 
 @section('title', $title)
 
 @section('content')
     <section class="pt-custom pb-5">
-        <div class="container-fluid px-4">
+        <div class="container px-4">
             <!-- Tombol Kembali -->
             <div class="mb-4">
-                <a href="/users" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
                     <i class="fa-solid fa-arrow-left"></i> <span>Kembali ke Data User</span>
                 </a>
             </div>
 
             <!-- Card Detail Profile -->
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                         <!-- Banner / Header Card -->
                         <div class="bg-primary bg-opacity-10 p-4 text-center position-relative pt-5 pb-5">
@@ -26,10 +26,17 @@
 
                             <!-- Avatar -->
                             <div class="position-relative d-inline-block mt-3">
-                                <img src="{{ $user->profile->avatar ?? asset('images/default-avatar.png') }}"
+                            @if($user->profile?->avatar)
+                                <img src="{{ $user->profile->avatar }}"
                                      class="rounded-circle profile-pic border border-4 border-white shadow-sm"
                                      alt="Profile Picture"
                                      style="width: 120px; height: 120px; object-fit: cover;">
+                            @else
+                                <div class="bg-primary text-white rounded-circle profile-pic border border-4 border-white shadow-sm d-flex align-items-center justify-content-center fw-bold"
+                                     style="width: 120px; height: 120px; font-size: 48px;">
+                                    {{ strtoupper(substr($user->username, 0, 1)) }}
+                                </div>
+                            @endif
                             </div>
                         </div>
 
