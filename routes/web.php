@@ -5,7 +5,9 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\UserController;
+use App\Mail\WelcomeMail;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -74,6 +76,15 @@ Route::middleware('auth')->group(function () {
     })->middleware('tokenvalid');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::get('/send-welcome-mail', function () {
+    $data = [
+        'email' => 'aaa@example.com',
+        'password' => 'aaa123',
+    ];
+
+    Mail::to('aaa@example.com')->send(new WelcomeMail($data));
 });
 
 Route::get('/version', function () {
