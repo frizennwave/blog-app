@@ -6,7 +6,10 @@ use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
@@ -31,8 +34,22 @@ class BlogController extends Controller
         $keyword = $request->title;
         $tags = Tag::all();
 
+        /* $user = Auth::user(); */
+        /* $query = Blog::with(['rating', 'tags', 'user.profile']); */
+        /**/
+        /* if ($user->hasRole('editor')) { */
+        /*     $query->where('user_id', $user->id); */
+        /* } */
+        /**/
+        /* if ($request->has('title') && $request->title != '') { */
+        /*     $query->where(function ($q) use ($keyword) { */
+        /*         $q->where('title', 'LIKE', "%{$keyword}%"); */
+        /*     }); */
+        /* } */
         // $blogs = DB::table('blogs')->where('title', 'LIKE', '%'.$title.'%')->orderBy('id', 'desc')->paginate(5);
         $blogs = Blog::with(['rating', 'tags', 'user.profile'])->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id', 'desc')->paginate(5);
+
+        /* $blogs = $query->latest()->paginate(5); */
         $title = 'Blog';
 
         return view('private.blog', compact('title', 'blogs', 'keyword', 'tags'));
@@ -52,7 +69,6 @@ class BlogController extends Controller
     {
         $request->validate([
             'title' => 'required|unique:blogs|max:255',
-            'author' => 'required|max:255',
             'content' => 'required'
         ]);
 
@@ -67,8 +83,23 @@ class BlogController extends Controller
         //     'updated_at' => now()
         // ]);
 
-        $blog = Blog::create($request->all());
+        $blog = Blog::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'user_id' => Auth::user()->id,
+            'content' => $request->content,
+        ]);
+
         $blog->tags()->attach($request->tags);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $file->store('blog-images', 'public');
+
+            $blog->image()->create([
+                'name' => $file->hashName(),
+            ]);
+        }
 
         return redirect(route('blog'))->with('success', 'Data berhasil disimpan!');
     }
@@ -111,6 +142,9 @@ class BlogController extends Controller
     {
         // DB::table('blogs')->where('slug', $slug)->delete();
         $blog = Blog::where('slug', $slug)->firstOrFail();
+
+        Gate::authorize('delete', $blog);
+
         $blog->delete();
 
         return redirect(route('blog'))->with('success', 'Data dipindahkan ke sampah!');
@@ -132,19 +166,29 @@ class BlogController extends Controller
                 $query->withTrashed();
             }, 'tags', 'user.profile'])->where('slug', $slug)->firstOrFail();
 
+        Gate::authorize('view', $blog);
+
         return view('private.detail_trash_blog', ['title' => 'Detail Blog', 'blog' => $blog]);
     }
 
     public function restore(string $slug)
     {
-        Blog::onlyTrashed()->where('slug', $slug)->restore();
+        $blog = Blog::onlyTrashed()->where('slug', $slug)->firstOrFail();
+
+        Gate::authorize('restore', $blog);
+
+        $blog->restore();
 
         return redirect(route('blog'))->with('success', 'Data Berhasil dipulihkan!');
     }
 
     public function delete(string $slug)
     {
-        Blog::onlyTrashed()->where('slug', $slug)->forceDelete();
+        $blog = Blog::onlyTrashed()->where('slug', $slug)->firstOrFail();
+
+        Gate::authorize('forceDelete', $blog);
+
+        $blog->forceDelete();
 
         return redirect(route('blog'))->with('success', 'Data Berhasil dihapus!');
     }

@@ -34,6 +34,25 @@
                             <span><i class="fa-regular fa-calendar me-1"></i> {{ $news->created_at->format('d M Y') }}</span>
                         </div>
 
+                        <!-- News Image -->
+                        <div class="mb-4">
+                            @if ($news->image && Storage::disk('public')->exists('news-images/' . $news->image->name))
+                                <img
+                                    src="{{ Storage::disk('public')->url('blog-images/' . $news->image->name) }}"
+                                    class="img-fluid rounded-4 w-100 shadow-sm"
+                                    alt="{{ $news->title }}"
+                                    style="max-height: 450px; object-fit: cover;"
+                                >
+                            @else
+                                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center text-muted" style="height: 300px;">
+                                    <div class="text-center">
+                                        <i class="fa-regular fa-image fa-3x mb-2"></i>
+                                        <p class="mb-0">No Image Available</p>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
                         <!-- News Post Content -->
                         <div class="post-content text-secondary lh-lg mb-4">
                             <p style="white-space: pre-line;">{{ $news->content }}</p>

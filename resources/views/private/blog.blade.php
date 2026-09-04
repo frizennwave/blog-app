@@ -115,17 +115,12 @@
                     <h5 class="modal-title fw-bold text-dark" id="addBlogModalLabel"><i class="fa-solid fa-plus-circle text-primary me-2"></i>Tambah Blog Baru</h5>
                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('createBlog') }}" method="POST">
+                <form action="{{ route('createBlog') }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-body px-4">
                         <div class="mb-3">
                             <label for="title" class="form-label fw-semibold small text-muted">Title Artikel:</label>
                             <input name="title" type="text" class="form-control bg-light border-0 py-2" id="title"
                                 value="{{ old('title') }}" placeholder="Masukkan judul blog..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="author" class="form-label fw-semibold small text-muted">Author:</label>
-                            <input name="author" type="text" class="form-control bg-light border-0 py-2" id="author"
-                                value="{{ old('author') }}" placeholder="Nama penulis..." required>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label fw-semibold small text-muted">Content:</label>
@@ -140,6 +135,16 @@
                                     <label class="form-check-label small text-secondary" for="addTag{{ $key }}">{{ $tag->name }}</label>
                                 </div>
                                 @endforeach
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="row">
+                                <div class="col-end-9 mb-1">
+                                    <label class="form-label fw-semibold small text-muted d-block" for="uploadImageBlog">Upload Blog Image:</label>
+                                </div>
+                                <div class="col-end-9">
+                                    <input type="file" class="form-control" name="image" id="uploadImageBlog">
+                                </div>
                             </div>
                         </div>
                     </div>

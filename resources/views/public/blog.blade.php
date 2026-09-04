@@ -41,9 +41,9 @@
                     <div class="card h-100 border-0 shadow-sm overflow-hidden">
 
                         {{-- Image --}}
-                        @if ($blog->image && Storage::disk('public')->exists('images/' . $blog->image->name))
+                        @if ($blog->image && Storage::disk('public')->exists('blog-images/' . $blog->image->name))
                             <img
-                                src="{{ Storage::disk('public')->url('images/' . $blog->image->name) }}"
+                                src="{{ Storage::disk('public')->url('blog-images/' . $blog->image->name) }}"
                                 class="card-img-top"
                                 alt="{{ $blog->title }}"
                                 style="height: 220px; object-fit: cover;"

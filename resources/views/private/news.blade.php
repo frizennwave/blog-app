@@ -105,7 +105,7 @@
 
     <!-- Modal Tambah News -->
     <div class="modal fade" id="addNewsModal" tabindex="-1" aria-labelledby="addNewsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0 px-4 pt-4">
                     <h5 class="modal-title fw-bold text-dark" id="addNewsModalLabel"><i class="fa-solid fa-plus text-primary me-2"></i>Tambah News</h5>
@@ -147,7 +147,7 @@
 
     <!-- Modal Ubah News -->
     <div class="modal fade" id="updateNewsModal" tabindex="-1" aria-labelledby="updateNewsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0 px-4 pt-4">
                     <h5 class="modal-title fw-bold text-dark" id="updateNewsModalLabel"><i class="fa-regular fa-pen-to-square text-success me-2"></i>Ubah News</h5>

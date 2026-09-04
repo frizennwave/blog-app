@@ -7,7 +7,7 @@
         <div class="container-fluid px-4">
             <!-- Blog Post Container -->
             <div class="row justify-content-center">
-                <div class="col-lg-9">
+                <div class="col">
                     <!-- Tombol Kembali -->
                     <div class="mb-4">
                         <a href="{{ route('trashBlog') }}" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
@@ -42,6 +42,25 @@
                             <span><i class="fa-regular fa-calendar me-1"></i> Dibuat: {{ $blog->created_at->format('d M Y') }}</span>
                             <span>•</span>
                             <span class="text-danger"><i class="fa-regular fa-trash-can me-1"></i> Dihapus: {{ $blog->deleted_at->format('d M Y') }}</span>
+                        </div>
+
+                        <!-- Blog Image (Ditambahkan di sini) -->
+                        <div class="mb-4">
+                            @if ($blog->image && Storage::disk('public')->exists('blog-images/' . $blog->image->name))
+                                <img
+                                    src="{{ Storage::disk('public')->url('blog-images/' . $blog->image->name) }}"
+                                    class="img-fluid rounded-4 w-100 shadow-sm"
+                                    alt="{{ $blog->title }}"
+                                    style="max-height: 450px; object-fit: cover;"
+                                >
+                            @else
+                                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center text-muted" style="height: 300px;">
+                                    <div class="text-center">
+                                        <i class="fa-regular fa-image fa-3x mb-2"></i>
+                                        <p class="mb-0">No Image Available</p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Blog Post Content -->
