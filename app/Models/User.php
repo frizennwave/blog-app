@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -18,7 +20,7 @@ use Illuminate\Support\Str;
 #[Fillable(['username', 'slug', 'email', 'password'])]
 #[Guarded(['id', 'created_at', 'updated_at'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     // /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;

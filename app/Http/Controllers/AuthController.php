@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +32,35 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
+    public function register()
+    {
+        return view('public.register');
+    }
+
+    public function createUser(Request $request)
+    {
+        $credentials = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'username' => $credentials['username'],
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+        ]);
+
+        $user->profile()->create([
+            'name' => $credentials['name'],
+        ]);
+
+        event(new Registered($user));
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan login.');
+    }
+
     public function logout (Request $request)
     {
         Auth::logout();
@@ -36,6 +68,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
