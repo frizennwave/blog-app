@@ -1,73 +1,99 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('title', $title)
 
 @section('content')
-    <section class="pt-custom">
-        <div class="container">
-            <h1 class="fs-2 mb-5">Sampah User</h1>
+    <section class="pt-custom pb-5">
+        <div class="container-fluid px-4">
+            <!-- Header Section dengan Desain Kartu Modern -->
+            <div class="mb-4">
+                <h1 class="h3 fw-bold mb-1 text-dark">Sampah User</h1>
+                <p class="text-muted small mb-0">Kelola dan pulihkan data pengguna yang telah dihapus.</p>
+            </div>
+            <div class="mb-4">
+                <a href="/users" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Kembali ke Data User</span>
+                </a>
+            </div>
 
-            <div class="row justify-content-end max-w-50">
-                <div class="col-md-6">
-                    <a href="/users" class="btn btn-primary mb-3">
-                        <i class="fa-solid fa-arrow-left"></i> Kembali
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <form class="d-flex" method="GET">
-                        <div class="input-group">
-                            <input name="name" class="form-control form-control-md" type="search" placeholder="Search"
-                                aria-label="Search" value="{{ $keyword }}" autofocus>
-                            <button class="btn btn-primary px-4" type="submit">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
+            <!-- Card Utama untuk Tabel & Filter -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                <div class="card-header bg-white border-0 p-4 pb-0">
+                    <div class="row align-items-center justify-content-between g-3">
+                        <div class="col-auto">
+                            <h5 class="fw-bold mb-0 text-secondary fs-6"><i class="fa-solid fa-trash-arrow-up me-2 text-danger"></i>Daftar Sampah User</h5>
                         </div>
-                    </form>
+                        <div class="col-md-4">
+                            <form class="d-flex" method="GET">
+                                <div class="input-group input-group-sm">
+                                    <input name="name" class="form-control rounded-start-pill ps-3 bg-light border-0" type="search" placeholder="Cari nama user..."
+                                        aria-label="Search" value="{{ $keyword }}" autofocus>
+                                    <button class="btn btn-primary rounded-end-pill px-3" type="submit">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body px-4 py-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-uppercase fs-7 text-muted">
+                                <tr>
+                                    <th scope="col" class="py-3 ps-3" style="width: 5%;">No</th>
+                                    <th scope="col" class="py-3">Nama & Informasi</th>
+                                    <th scope="col" class="py-3">Email</th>
+                                    <th scope="col" class="py-3 text-center" style="width: 15%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($users as $user)
+                                    <tr>
+                                        <th scope="row" class="ps-3 text-muted fw-semibold">{{ ($users->firstItem() ?? 0) + $loop->index }}</th>
+                                        <td>
+                                            <span class="fw-semibold text-dark d-block">{{ $user->profile->name ?? 'Tanpa Nama' }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-secondary">{{ $user->email }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center align-items-center gap-1">
+                                                <a href="/user/trash/{{ $user->slug }}" class="text-info text-decoration-none px-2 py-1" title="Detail">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                </a>
+                                                <a href="/user/restore/{{ $user->slug }}" class="text-success text-decoration-none px-2 py-1 btn-restore" title="Pulihkan">
+                                                    <i class="fa-solid fa-trash-arrow-up"></i>
+                                                </a>
+                                                <form action="/user/delete/{{ $user->slug }}" method="POST" class="d-inline form-delete">
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-danger bg-transparent border-0 px-2 py-1 btn-delete" title="Hapus Permanen">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="fa-regular fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
+                                            <span>Tidak ada data sampah user yang ditemukan.</span>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 px-4 py-3">
+                    <div>
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table class="table w-100 table-hover table-striped mb-2">
-                    <thead>
-                        <tr>
-                            <th scope="col" style="width: 3%; white-space: nowrap;">No</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col" class="hidden">Email</th>
-                            <th scope="col" class="text-center text-nowrap actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        @forelse ($users as $user)
-                            <tr>
-                                <th scope="row">{{ ($users->firstItem() ?? 0) + $loop->index }}</th>
-                                <td>{{ $user->profile->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td class="text-center text-nowrap">
-                                    <a href="/user/trash/{{ $user->slug }}" class="text-primary">
-                                        <i class="fa-solid fa-circle-info"></i>
-                                    </a> |
-                                    <a href="/user/restore/{{ $user->slug }}" class="text-success btn-restore">
-                                        <i class="fa-solid fa-trash-arrow-up"></i>
-                                    </a> |
-                                    <form action="/user/delete/{{ $user->slug }}" method="POST"
-                                        class="d-inline form-delete">
-                                        @method('DELETE')
-                                        <button type="submit" class="text-danger border-0 bg-transparent px-0 btn-delete">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">No data found</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            {{ $users->links() }}
         </div>
     </section>
 
@@ -77,7 +103,9 @@
                 icon: 'success',
                 title: 'Berhasil',
                 text: "{{ session('success') }}",
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                customClass: { confirmButton: 'btn btn-primary px-4 rounded-pill' },
+                buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = "{{ url('/users') }}";
@@ -90,7 +118,9 @@
                 icon: 'error',
                 title: 'Terjadi kesalahan',
                 text: '{{ $errors->first() }}',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                customClass: { confirmButton: 'btn btn-danger px-4 rounded-pill' },
+                buttonsStyling: false
             });
         </script>
     @endif
@@ -106,12 +136,17 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
-                    cancelButtonColor: '#0d6efd',
+                    cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: 'btn btn-danger px-4 rounded-pill me-2',
+                        cancelButton: 'btn btn-secondary px-4 rounded-pill'
+                    },
+                    buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit(); // lanjut delete
+                        form.submit();
                     }
                 });
             });
@@ -119,7 +154,7 @@
 
         document.querySelectorAll('.btn-restore').forEach(button => {
             button.addEventListener('click', function(e) {
-                e.preventDefault(); //
+                e.preventDefault();
 
                 const url = this.getAttribute('href');
 
@@ -128,10 +163,15 @@
                     text: 'Data akan dipulihkan!',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#0d6efd',
+                    confirmButtonColor: '#198754',
+                    cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Ya, pulihkan!',
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: 'btn btn-success px-4 rounded-pill me-2',
+                        cancelButton: 'btn btn-secondary px-4 rounded-pill'
+                    },
+                    buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = url;

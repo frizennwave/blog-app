@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('bio')->nullable();
-            $table->string('avatar')->nullable();
             $table->string('website')->nullable();
             $table->timestamps();
         });

@@ -1,38 +1,74 @@
-@extends('layouts.app')
+@extends(auth()->user()->hasRole('user') ? 'layouts.app' : 'layouts.dashboard')
 
 @section('title', $title)
 
 @section('content')
-    <div class="bg-light pt-4 min-vh-100">
-        <div class="container py-5">
-            <div class="row">
-                <!-- Profile Header -->
-                <div class="col-12 mb-4">
-                    <a href="/users" class="btn btn-primary mb-3">
-                        <i class="fa-solid fa-arrow-left"></i> Kembali
-                    </a>
-                    <div class="profile-header position-relative mb-4">
-                        <div class="position-absolute top-0 end-0 p-3">
-                            <button class="btn btn-light"><i class="fas fa-edit me-2"></i>Edit Profile</button>
+    <section class="pt-custom pb-5">
+        <div class="container px-4">
+            <!-- Tombol Kembali -->
+            <div class="mb-4">
+                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Kembali ke Data User</span>
+                </a>
+            </div>
+
+            <!-- Card Detail Profile -->
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                        <!-- Banner / Header Card -->
+                        <div class="bg-primary bg-opacity-10 p-4 text-center position-relative pt-5 pb-5">
+                            <div class="position-absolute top-0 end-0 p-3">
+                                <button class="btn btn-light btn-sm px-3 rounded-pill shadow-sm">
+                                    <i class="fas fa-edit me-1 text-primary"></i> Edit Profile
+                                </button>
+                            </div>
+
+                            <!-- Avatar -->
+                            <div class="position-relative d-inline-block mt-3">
+                            @if($user->profile?->avatar)
+                                <img src="{{ $user->profile->avatar }}"
+                                     class="rounded-circle profile-pic border border-4 border-white shadow-sm"
+                                     alt="Profile Picture"
+                                     style="width: 120px; height: 120px; object-fit: cover;">
+                            @else
+                                <div class="bg-primary text-white rounded-circle profile-pic border border-4 border-white shadow-sm d-flex align-items-center justify-content-center fw-bold"
+                                     style="width: 120px; height: 120px; font-size: 48px;">
+                                    {{ strtoupper(substr($user->username, 0, 1)) }}
+                                </div>
+                            @endif
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="position-relative d-inline-block">
-                            <img src="{{ $user->profile->avatar }}" class="rounded-circle profile-pic"
-                                alt="Profile Picture">
-                        </div>
-                        <h3 class="mt-3 mb-1">{{ $user->username }}</h3>
-                        <p class="text-muted mb-3">{{ $user->profile->name }}</p>
-                        <div class="d-flex justify-content-center gap-2 mb-4">
-                            <button class="btn btn-outline-primary"><i class="fas fa-envelope me-2"></i>Message</button>
-                            <a href="{{ $user->profile->website }}" class="btn btn-primary"><i class="fa-solid fa-globe me-2"></i>Website</a>
-                        </div>
-                        <div class="d-flex justify-content-center gap-2 mb-4">
-                            <p>{{ $user->profile->bio }}</p>
+
+                        <!-- Body Card -->
+                        <div class="card-body px-4 py-4 text-center">
+                            <h3 class="fw-bold text-dark mb-1">{{ $user->username }}</h3>
+                            <p class="text-muted fw-semibold mb-3">{{ $user->profile->name ?? 'Tanpa Nama' }}</p>
+
+                            <!-- Aksi Tombol -->
+                            <div class="d-flex justify-content-center gap-2 mb-4">
+                                <button class="btn btn-outline-primary px-3 rounded-pill shadow-sm">
+                                    <i class="fas fa-envelope me-1"></i> Message
+                                </button>
+                                @if (!empty($user->profile->website))
+                                    <a href="{{ $user->profile->website }}" target="_blank" class="btn btn-primary px-3 rounded-pill shadow-sm">
+                                        <i class="fa-solid fa-globe me-1"></i> Website
+                                    </a>
+                                @endif
+                            </div>
+
+                            <!-- Bio -->
+                            <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                    <div class="p-3 bg-light rounded-4 text-secondary small">
+                                        <p class="mb-0">{{ $user->profile->bio ?? 'Belum ada bio yang ditambahkan.' }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

@@ -24,7 +24,6 @@ class ProfileFactory extends Factory
             'user_id' => User::factory(),
             'name' => $name,
             'bio' => fake()->sentence(),
-            'avatar' => null,
             'website' => fake()->url()
         ];
     }
