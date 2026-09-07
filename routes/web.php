@@ -22,6 +22,18 @@ Route::get('/blog', [BlogController::class, 'index'])->name('public_blog');
 // Public Blog Route
 Route::get('/news', [NewsController::class, 'index'])->name('public_news');
 
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('password.request');
+
+Route::post('/forgot-password', [AuthController::class, 'passwordEmail'])->name('password.email');
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->name('password.reset');
+
+Route::post('/reset-password', [AuthController::class, 'passwordUpdate'])->name('password.update');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticating']);

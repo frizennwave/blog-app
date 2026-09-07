@@ -24,6 +24,14 @@
                         </div>
                     @endif
 
+                    <!-- Session Status Alert -->
+                    @if (session('status'))
+                        <div class="alert alert-success alert-dismissible fade show small" role="alert">
+                            {{ session('status') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
                     <!-- Alert Gagal / Error Login -->
                     @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show rounded-3 small py-2 px-3 mb-3 shadow-sm position-relative pe-5 auto-close-alert" role="alert">
@@ -61,7 +69,7 @@
                                 <input type="checkbox" class="form-check-input" id="remember">
                                 <label class="form-check-label text-muted small" for="remember">Remember me</label>
                             </div>
-                            <a href="#" class="small link-grey">Lupa password?</a>
+                            <a href="{{ Route('password.request') }}" class="small link-grey">Lupa password?</a>
                         </div>
 
                         <div class="d-grid">
