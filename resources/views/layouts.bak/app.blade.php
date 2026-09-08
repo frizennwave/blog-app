@@ -1,28 +1,19 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? config('app.name') }}</title>
-
-    <!-- Bootstrap 5 CSS -->
+    <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Livewire Styles (Wajib untuk Livewire) -->
-    @livewireStyles
 
     <style>
         .hero {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a, #06b6d4);
+background: linear-gradient(135deg, #0f172a, #06b6d4);
         }
 
         .hero img {
@@ -142,7 +133,7 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm position-fixed w-100 z-3">
         <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="/" wire:navigate>
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
                 <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo"
                     width="30" height="24" class="d-inline-block align-text-top me-2">
                 <span>LaravelApp</span>
@@ -153,35 +144,35 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <a class="nav-link px-3 rounded-pill {{ Route::is('home') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}" href="{{ Route('home') }}" wire:navigate>Home</a>
+                    <a class="nav-link px-3 rounded-pill {{ Route::is('home') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}" href="{{ Route('home') }}">Home</a>
                     <a class="nav-link px-3 rounded-pill {{ Route::is('public_blog') || Route::is('detailPublicBlog') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}"
-                        href="{{ Route('public_blog') }}" wire:navigate>Blog</a>
+                        href="{{ Route('public_blog') }}">Blog</a>
                     <a class="nav-link px-3 rounded-pill {{ Route::is('public_news') || Route::is('detailPublicNews') ? 'active fw-semibold bg-primary bg-opacity-10 text-primary' : '' }}"
-                        href="{{ Route('public_news') }}" wire:navigate>News</a>
+                        href="{{ Route('public_news') }}">News</a>
 
                     @guest
                         <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
-                            href="{{ Route('login') }}" wire:navigate>
+                            href="{{ Route('login') }}">
                             <i class="fa-solid fa-right-to-bracket me-1"></i> Login
                         </a>
                     @endguest
 
                     @auth
                         <a class="btn btn-danger btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
-                            href="/logout" wire:navigate>
+                            href="/logout">
                             <i class="fa-solid fa-right-to-bracket me-1"></i> Logout
                         </a>
 
                         @role(['admin', 'editor'])
                         <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
-                            href="{{ Route('dashboard') }}" wire:navigate>
-                            <i class="fa-solid fa-house-chimney me-1"></i> Dashboard
+                            href="{{ Route('dashboard') }}">
+                            <i class="fa-solid fa-house-chimney me-1"></i> Dasboard
                         </a>
                         @endrole
 
                         @role('user')
                         <a class="btn btn-primary btn-sm px-4 rounded-pill ms-lg-2 mt-2 mt-lg-0 text-white fw-semibold"
-                            href="{{ Route('detailUser', ['slug' => auth()->user()->slug]) }}" wire:navigate>
+                            href="{{ Route('detailUser', ['slug' => auth()->user()->slug]) }}">
                             <i class="fa-solid fa-user me-1"></i> Profile
                         </a>
                         @endrole
@@ -191,15 +182,16 @@
         </div>
     </nav>
 
-    {{ $slot }}
+    <main>
+        @yield('content')
+    </main>
 
-    <!-- Bootstrap 5 JS Bundle (Popper sudah termasuk di dalam bundle 5.3) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
-
-    <!-- Livewire Scripts (Wajib untuk Livewire v3) -->
-    @livewireScripts
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

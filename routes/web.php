@@ -12,15 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('public.home', ['title' => 'Home']);
-})->name('home');
-
-// Public Blog Route
-Route::get('/blog', [BlogController::class, 'index'])->name('public_blog');
-
-// Public Blog Route
-Route::get('/news', [NewsController::class, 'index'])->name('public_news');
+Route::livewire('/', 'pages::home')->name('home');
+Route::livewire('/blog', 'pages::blogs.index')->name('public_blog');
+Route::livewire('/news', 'pages::news.index')->name('public_news');
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
