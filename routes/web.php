@@ -29,9 +29,9 @@ Route::get('/reset-password/{token}', function (string $token) {
 Route::post('/reset-password', [AuthController::class, 'passwordUpdate'])->name('password.update');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::livewire('/login', 'pages::auth.login')->name('login');
     Route::post('/login', [AuthController::class, 'authenticating']);
-    Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::livewire('/register', 'pages::auth.register')->name('register');
     Route::post('/register', [AuthController::class, 'createUser']);
 });
 
@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::middleware('role:admin')->group(function () {
-             // Private User Route
+            // Private User Route
             Route::get('/users', [UserController::class, 'index'])->name('user');
             Route::delete('/user/{slug}', [UserController::class, 'softDelete']);
             Route::get('/user/trash/{slug}', [UserController::class, 'trashDetail'])->name('detailTrashUser');
